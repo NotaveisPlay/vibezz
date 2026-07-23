@@ -1174,7 +1174,12 @@ window.addEventListener(
 window.addEventListener(
   "touchmove",
   (event) => {
-    event.preventDefault();
+    const touchedElement = document.elementFromPoint(event.touches[0]?.clientX || 0, event.touches[0]?.clientY || 0);
+    const isScrollingShop = Boolean(touchedElement?.closest(".shop-list, .shop-panel"));
+
+    if (!isScrollingShop) {
+      event.preventDefault();
+    }
 
     for (const touch of event.changedTouches) {
       if (touch.identifier === activeTouches.joystickId) {
