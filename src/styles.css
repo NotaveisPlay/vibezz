@@ -795,3 +795,86 @@ body,
     font-size: 13px;
   }
 }
+
+@media (max-height: 620px) and (orientation: landscape) {
+  .shop-panel {
+    padding: 8px;
+  }
+
+  .shop-shell {
+    width: min(820px, calc(100vw - 18px));
+    height: min(420px, calc(100vh - 18px));
+    padding: 10px;
+  }
+
+  .shop-header {
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .shop-header h2 {
+    margin-bottom: 2px;
+    font-size: 24px;
+  }
+
+  .shop-header p {
+    font-size: 12px;
+  }
+
+  .panel-close-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .shop-layout {
+    grid-template-columns: 240px 1fr;
+    height: calc(100% - 52px);
+  }
+
+  .refresh-shop-button {
+    min-height: 34px;
+    font-size: 12px;
+  }
+
+  .shop-item-button {
+    grid-template-columns: 36px 1fr;
+    min-height: 50px;
+  }
+
+  .shop-item-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .shop-item-button strong {
+    font-size: 13px;
+  }
+
+  .shop-item-button small {
+    font-size: 11px;
+  }
+
+  .shop-preview-wrap {
+    min-height: 0;
+  }
+
+  .shop-item-info {
+    left: 10px;
+    bottom: 10px;
+    max-width: calc(100% - 180px);
+    padding: 8px 10px;
+  }
+
+  .shop-item-info strong {
+    font-size: 20px;
+  }
+
+  .place-shop-item-button {
+    right: 10px;
+    bottom: 10px;
+    width: 154px;
+    min-height: 48px;
+    font-size: 12px;
+  }
+}
