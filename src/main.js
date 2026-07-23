@@ -149,6 +149,16 @@ const editor = {
 selectionBox.visible = false;
 scene.add(selectionBox);
 
+const proceduralCatalog = [
+  { id: "desk_setup", name: "Mesa Setup", price: 420, kind: "procedural", category: "Setup" },
+  { id: "pc_tower", name: "PC Gamer", price: 320, kind: "procedural", category: "Setup" },
+  { id: "cozy_bed", name: "Cama Cozy", price: 520, kind: "procedural", category: "Quarto" },
+  { id: "small_shelf", name: "Prateleira Geek", price: 260, kind: "procedural", category: "Decor" },
+  { id: "poster_frame", name: "Poster Pixel", price: 120, kind: "procedural", category: "Parede" },
+  { id: "tv_stand", name: "Rack com TV", price: 460, kind: "procedural", category: "Setup" },
+  { id: "led_bar", name: "Barra LED", price: 160, kind: "procedural", category: "Luz" },
+];
+
 function makeMaterial(color) {
   return new THREE.MeshLambertMaterial({ color });
 }
@@ -164,6 +174,22 @@ function makeWallMaterial(color) {
 function addBoxToGroup(group, { name, size, position, color }) {
   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
   const mesh = new THREE.Mesh(geometry, makeMaterial(color));
+  mesh.name = name;
+  mesh.position.copy(position);
+  group.add(mesh);
+  return mesh;
+}
+
+function addModelBox(group, name, size, position, color) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(size.x, size.y, size.z), makeMaterial(color));
+  mesh.name = name;
+  mesh.position.copy(position);
+  group.add(mesh);
+  return mesh;
+}
+
+function addModelCylinder(group, name, radius, height, position, color, segments = 8) {
+  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, segments), makeMaterial(color));
   mesh.name = name;
   mesh.position.copy(position);
   group.add(mesh);
@@ -516,11 +542,79 @@ function getNiceItemName(fileName) {
 
 function makeShopItem(fileName) {
   return {
-    id: fileName,
+    id: `remote:${fileName}`,
     name: getNiceItemName(fileName),
+    kind: "remote",
+    category: "Supabase",
     path: `models/${fileName}`,
     price: 250,
   };
+}
+
+function createProceduralModel(id) {
+  const group = new THREE.Group();
+  group.name = id;
+
+  if (id === "desk_setup") {
+    addModelBox(group, "DeskTop", new THREE.Vector3(1.45, 0.12, 0.62), new THREE.Vector3(0, 0.74, 0), 0x566cc9);
+    addModelBox(group, "DeskLegA", new THREE.Vector3(0.1, 0.72, 0.1), new THREE.Vector3(-0.6, 0.36, -0.22), 0x2f3446);
+    addModelBox(group, "DeskLegB", new THREE.Vector3(0.1, 0.72, 0.1), new THREE.Vector3(0.6, 0.36, -0.22), 0x2f3446);
+    addModelBox(group, "DeskLegC", new THREE.Vector3(0.1, 0.72, 0.1), new THREE.Vector3(-0.6, 0.36, 0.22), 0x2f3446);
+    addModelBox(group, "DeskLegD", new THREE.Vector3(0.1, 0.72, 0.1), new THREE.Vector3(0.6, 0.36, 0.22), 0x2f3446);
+    addModelBox(group, "Monitor", new THREE.Vector3(0.68, 0.42, 0.06), new THREE.Vector3(0, 1.08, -0.24), 0x151925);
+    addModelBox(group, "MonitorStand", new THREE.Vector3(0.1, 0.25, 0.08), new THREE.Vector3(0, 0.9, -0.2), 0x202638);
+    addModelBox(group, "Keyboard", new THREE.Vector3(0.52, 0.04, 0.16), new THREE.Vector3(-0.18, 0.83, 0.08), 0x252b3e);
+    addModelBox(group, "Mousepad", new THREE.Vector3(0.36, 0.03, 0.24), new THREE.Vector3(0.32, 0.83, 0.08), 0x77d6a8);
+  }
+
+  if (id === "pc_tower") {
+    addModelBox(group, "Case", new THREE.Vector3(0.42, 0.78, 0.62), new THREE.Vector3(0, 0.39, 0), 0x222838);
+    addModelBox(group, "Glass", new THREE.Vector3(0.03, 0.58, 0.46), new THREE.Vector3(-0.225, 0.44, 0), 0x1b708a);
+    addModelBox(group, "FrontLed", new THREE.Vector3(0.035, 0.62, 0.05), new THREE.Vector3(0.225, 0.44, -0.22), 0x77d6a8);
+    addModelCylinder(group, "FanTop", 0.1, 0.035, new THREE.Vector3(-0.23, 0.57, 0.12), 0x79d6ff);
+    addModelCylinder(group, "FanBottom", 0.1, 0.035, new THREE.Vector3(-0.23, 0.31, 0.12), 0xf0b33f);
+  }
+
+  if (id === "cozy_bed") {
+    addModelBox(group, "Base", new THREE.Vector3(1.85, 0.32, 1.08), new THREE.Vector3(0, 0.16, 0), 0x3c455d);
+    addModelBox(group, "Mattress", new THREE.Vector3(1.72, 0.22, 0.98), new THREE.Vector3(0, 0.43, 0), 0xe8d8c6);
+    addModelBox(group, "Blanket", new THREE.Vector3(1.72, 0.08, 0.55), new THREE.Vector3(0, 0.6, 0.2), 0x6d7fd1);
+    addModelBox(group, "PillowA", new THREE.Vector3(0.55, 0.12, 0.28), new THREE.Vector3(-0.38, 0.62, -0.32), 0xf5eadb);
+    addModelBox(group, "PillowB", new THREE.Vector3(0.55, 0.12, 0.28), new THREE.Vector3(0.38, 0.62, -0.32), 0xf5eadb);
+    addModelBox(group, "Headboard", new THREE.Vector3(1.92, 0.72, 0.12), new THREE.Vector3(0, 0.42, -0.58), 0x2e3346);
+  }
+
+  if (id === "small_shelf") {
+    addModelBox(group, "ShelfBack", new THREE.Vector3(1.15, 0.08, 0.16), new THREE.Vector3(0, 1.05, 0), 0x47372f);
+    addModelBox(group, "ShelfTop", new THREE.Vector3(1.25, 0.08, 0.28), new THREE.Vector3(0, 1.24, 0), 0x6f5140);
+    addModelBox(group, "ShelfMid", new THREE.Vector3(1.25, 0.08, 0.28), new THREE.Vector3(0, 0.92, 0), 0x6f5140);
+    addModelBox(group, "BookA", new THREE.Vector3(0.1, 0.3, 0.16), new THREE.Vector3(-0.38, 1.08, 0), 0x6d7fd1);
+    addModelBox(group, "BookB", new THREE.Vector3(0.1, 0.25, 0.16), new THREE.Vector3(-0.25, 1.05, 0), 0xf0b33f);
+    addModelCylinder(group, "PlantPot", 0.1, 0.16, new THREE.Vector3(0.36, 1.04, 0), 0xd48b62);
+    addModelBox(group, "Plant", new THREE.Vector3(0.18, 0.22, 0.18), new THREE.Vector3(0.36, 1.23, 0), 0x77d6a8);
+  }
+
+  if (id === "poster_frame") {
+    addModelBox(group, "Frame", new THREE.Vector3(0.78, 1.08, 0.06), new THREE.Vector3(0, 0.74, 0), 0x1c2030);
+    addModelBox(group, "Art", new THREE.Vector3(0.64, 0.88, 0.065), new THREE.Vector3(0, 0.74, -0.005), 0x79d6ff);
+    addModelBox(group, "PixelSun", new THREE.Vector3(0.18, 0.18, 0.07), new THREE.Vector3(-0.16, 0.88, -0.02), 0xf0b33f);
+    addModelBox(group, "PixelHill", new THREE.Vector3(0.48, 0.22, 0.07), new THREE.Vector3(0.08, 0.52, -0.02), 0x77d6a8);
+  }
+
+  if (id === "tv_stand") {
+    addModelBox(group, "Stand", new THREE.Vector3(1.42, 0.36, 0.44), new THREE.Vector3(0, 0.18, 0), 0x30354a);
+    addModelBox(group, "DrawerA", new THREE.Vector3(0.5, 0.2, 0.05), new THREE.Vector3(-0.34, 0.2, -0.225), 0x48506d);
+    addModelBox(group, "DrawerB", new THREE.Vector3(0.5, 0.2, 0.05), new THREE.Vector3(0.34, 0.2, -0.225), 0x48506d);
+    addModelBox(group, "TV", new THREE.Vector3(1.1, 0.64, 0.08), new THREE.Vector3(0, 0.9, -0.12), 0x151925);
+    addModelBox(group, "TVStand", new THREE.Vector3(0.18, 0.28, 0.1), new THREE.Vector3(0, 0.54, -0.06), 0x202638);
+  }
+
+  if (id === "led_bar") {
+    addModelBox(group, "LedBar", new THREE.Vector3(1.25, 0.08, 0.08), new THREE.Vector3(0, 1.05, 0), 0x77d6a8);
+    addModelBox(group, "GlowFake", new THREE.Vector3(1.34, 0.12, 0.04), new THREE.Vector3(0, 1.05, -0.04), 0xb9ffe0);
+  }
+
+  return group;
 }
 
 function normalizeModelForPreview(model) {
@@ -546,8 +640,15 @@ function clearShopPreview() {
 function loadShopPreview(item) {
   clearShopPreview();
   shopItemName.textContent = item.name;
-  shopItemPath.textContent = item.path;
-  shopStatus.textContent = `Visualizando ${item.name}.`;
+  shopItemPath.textContent = item.kind === "procedural" ? `${item.category} - leve` : item.path;
+  shopStatus.textContent = item.kind === "procedural" ? "Starter Pack local, sem download." : `Visualizando ${item.name}.`;
+
+  if (item.kind === "procedural") {
+    shopPreviewModel = createProceduralModel(item.id);
+    normalizeModelForPreview(shopPreviewModel);
+    shopScene.add(shopPreviewModel);
+    return;
+  }
 
   const loader = new GLTFLoader();
   loader.load(
@@ -574,10 +675,10 @@ function renderShopList() {
     button.type = "button";
     button.dataset.itemId = item.id;
     button.innerHTML = `
-      <span class="shop-item-icon">3D</span>
+      <span class="shop-item-icon">${item.kind === "procedural" ? "LOW" : "3D"}</span>
       <span>
         <strong>${item.name}</strong>
-        <small>${item.price} moedas - ${item.path}</small>
+        <small>${item.price} moedas - ${item.category}</small>
       </span>
     `;
     button.addEventListener("click", () => selectShopItem(item.id));
@@ -597,8 +698,9 @@ function selectShopItem(itemId) {
 }
 
 async function loadShopItems() {
-  shopStatus.textContent = "Buscando modelos no Supabase Storage...";
+  shopStatus.textContent = "Montando loja...";
   shopList.innerHTML = "";
+  const localItems = proceduralCatalog.map((item) => ({ ...item }));
 
   const { data, error } = await supabase.storage.from(SUPABASE_ASSETS_BUCKET).list("models", {
     limit: 100,
@@ -606,15 +708,12 @@ async function loadShopItems() {
   });
 
   if (error) {
-    shopStatus.textContent = `Nao consegui listar a loja: ${error.message}`;
-    shopItems = [makeShopItem("cadeira.glb")];
+    shopStatus.textContent = "Loja local carregada. Supabase indisponivel agora.";
+    shopItems = localItems;
   } else {
-    shopItems = data.filter((item) => /\.(glb|gltf)$/i.test(item.name)).map((item) => makeShopItem(item.name));
-
-    if (shopItems.length === 0) {
-      shopStatus.textContent = "A lista veio vazia. Usando cadeira.glb como item conhecido.";
-      shopItems = [makeShopItem("cadeira.glb")];
-    }
+    const remoteItems = data.filter((item) => /\.(glb|gltf)$/i.test(item.name)).map((item) => makeShopItem(item.name));
+    shopItems = [...localItems, ...remoteItems];
+    shopStatus.textContent = `${shopItems.length} item(s) disponiveis.`;
   }
 
   renderShopList();
@@ -641,6 +740,16 @@ function closeShop() {
 
 function placeSelectedShopItem() {
   if (!selectedShopItem) return;
+
+  if (selectedShopItem.kind === "procedural") {
+    const item = createProceduralModel(selectedShopItem.id);
+    item.name = `Placed_${selectedShopItem.id}`;
+    item.position.set(0.45, 0, -0.55);
+    scene.add(item);
+    registerEditableObject(item, selectedShopItem.name);
+    closeShop();
+    return;
+  }
 
   const loader = new GLTFLoader();
   loader.load(
