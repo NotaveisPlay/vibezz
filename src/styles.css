@@ -77,6 +77,7 @@ body,
 
 .hud.is-editing .joystick,
 .hud.is-editing .hint,
+.hud.is-editing .fullscreen-button,
 .hud.is-editing .expand-mode-button,
 .hud.is-editing .shop-button,
 .hud.is-editing .edit-room-button {
@@ -94,6 +95,18 @@ body,
   cursor: pointer;
   pointer-events: auto;
   text-transform: uppercase;
+}
+
+.fullscreen-button {
+  position: absolute;
+  left: max(14px, env(safe-area-inset-left));
+  top: max(14px, env(safe-area-inset-top));
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.fullscreen-button.is-active {
+  background: rgba(119, 214, 168, 0.92);
 }
 
 .expand-mode-button {

@@ -6,6 +6,7 @@ const canvas = document.querySelector("#game");
 const startScreen = document.querySelector("#start-screen");
 const startButton = document.querySelector("#start-button");
 const hud = document.querySelector("#hud");
+const fullscreenButton = document.querySelector("#fullscreen-button");
 const joystick = document.querySelector("#joystick");
 const joystickKnob = document.querySelector("#joystick-knob");
 const expandModeButton = document.querySelector("#expand-mode-button");
@@ -882,6 +883,26 @@ function resetJoystick() {
   joystickKnob.style.transform = "translate(-50%, -50%)";
 }
 
+async function toggleFullscreen() {
+  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+
+  try {
+    if (fullscreenElement) {
+      await (document.exitFullscreen?.() || document.webkitExitFullscreen?.());
+    } else {
+      await (document.documentElement.requestFullscreen?.() || document.documentElement.webkitRequestFullscreen?.());
+    }
+  } catch (error) {
+    console.warn("Fullscreen indisponivel neste navegador.", error);
+  }
+}
+
+function updateFullscreenButton() {
+  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+  fullscreenButton.classList.toggle("is-active", Boolean(fullscreenElement));
+  fullscreenButton.textContent = fullscreenElement ? "Sair" : "Tela";
+}
+
 window.addEventListener("keydown", (event) => {
   if (event.code === "Escape" && shopPanel.classList.contains("is-visible")) {
     closeShop();
@@ -1087,6 +1108,9 @@ window.addEventListener("resize", () => {
 });
 
 expandModeButton.addEventListener("click", enterExpandMode);
+fullscreenButton.addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", updateFullscreenButton);
+document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
 closeExpandButton.addEventListener("click", exitExpandMode);
 unlockExpandButton.addEventListener("click", unlockExpansion);
 expandAmountInput.addEventListener("input", (event) => setExpansionModules(event.target.value));
