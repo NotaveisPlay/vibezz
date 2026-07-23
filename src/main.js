@@ -27,12 +27,7 @@ const shopList = document.querySelector("#shop-list");
 const shopPreviewCanvas = document.querySelector("#shop-preview");
 const shopItemName = document.querySelector("#shop-item-name");
 const shopItemPath = document.querySelector("#shop-item-path");
-const shopItemPrice = document.querySelector("#shop-item-price");
-const shopItemCategory = document.querySelector("#shop-item-category");
-const shopItemSource = document.querySelector("#shop-item-source");
 const placeShopItemButton = document.querySelector("#place-shop-item-button");
-const catalogPrevButton = document.querySelector("#catalog-prev-button");
-const catalogNextButton = document.querySelector("#catalog-next-button");
 const editRoomButton = document.querySelector("#edit-room-button");
 const editPanel = document.querySelector("#edit-panel");
 const closeEditButton = document.querySelector("#close-edit-button");
@@ -645,13 +640,7 @@ function clearShopPreview() {
 function loadShopPreview(item) {
   clearShopPreview();
   shopItemName.textContent = item.name;
-  shopItemPath.textContent =
-    item.kind === "procedural"
-      ? "Uma peca leve do Starter Pack, feita com formas simples para rodar bem no mobile."
-      : "Modelo 3D carregado do Supabase Storage para testar assets externos.";
-  shopItemPrice.textContent = `${item.price} moedas`;
-  shopItemCategory.textContent = item.category;
-  shopItemSource.textContent = item.kind === "procedural" ? "Starter" : "Supabase";
+  shopItemPath.textContent = item.kind === "procedural" ? `${item.category} - leve` : item.path;
   shopStatus.textContent = item.kind === "procedural" ? "Starter Pack local, sem download." : `Visualizando ${item.name}.`;
 
   if (item.kind === "procedural") {
@@ -686,7 +675,7 @@ function renderShopList() {
     button.type = "button";
     button.dataset.itemId = item.id;
     button.innerHTML = `
-      <span class="shop-item-icon">${String(shopItems.indexOf(item) + 1).padStart(2, "0")}</span>
+      <span class="shop-item-icon">${item.kind === "procedural" ? "LOW" : "3D"}</span>
       <span>
         <strong>${item.name}</strong>
         <small>${item.price} moedas - ${item.category}</small>
@@ -706,14 +695,6 @@ function selectShopItem(itemId) {
   if (selectedShopItem) {
     loadShopPreview(selectedShopItem);
   }
-}
-
-function selectShopOffset(offset) {
-  if (shopItems.length === 0 || !selectedShopItem) return;
-
-  const currentIndex = shopItems.findIndex((item) => item.id === selectedShopItem.id);
-  const nextIndex = (currentIndex + offset + shopItems.length) % shopItems.length;
-  selectShopItem(shopItems[nextIndex].id);
 }
 
 async function loadShopItems() {
@@ -1266,8 +1247,6 @@ shopButton.addEventListener("click", () => {
 closeShopButton.addEventListener("click", closeShop);
 refreshShopButton.addEventListener("click", loadShopItems);
 placeShopItemButton.addEventListener("click", placeSelectedShopItem);
-catalogPrevButton.addEventListener("click", () => selectShopOffset(-1));
-catalogNextButton.addEventListener("click", () => selectShopOffset(1));
 
 startButton.addEventListener("click", () => {
   startScreen.classList.add("is-hidden");

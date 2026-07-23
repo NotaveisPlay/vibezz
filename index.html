@@ -67,46 +67,30 @@
       </section>
 
       <section id="shop-panel" class="shop-panel" aria-hidden="true">
-        <div class="shop-shell catalog-shell">
+        <div class="shop-shell">
           <header class="shop-header">
             <div>
-              <span class="catalog-kicker">Catalogo digital 01</span>
-              <h2>Vibezz Mag</h2>
+              <h2>Loja Geek</h2>
               <p id="shop-status">Carregando catalogo...</p>
             </div>
             <button id="close-shop-button" class="panel-close-button" type="button" aria-label="Fechar">x</button>
           </header>
 
-          <div class="catalog-book">
-            <section class="catalog-page catalog-copy-page">
-              <span class="catalog-page-number">01</span>
-              <div class="catalog-copy">
-                <span class="catalog-section-label">Moveis low-poly</span>
-                <h3 id="shop-item-name">Nenhum item</h3>
-                <p id="shop-item-path">Escolha uma peca para ver detalhes.</p>
-              </div>
-              <div class="catalog-specs">
-                <div><span>Preco</span><strong id="shop-item-price">---</strong></div>
-                <div><span>Categoria</span><strong id="shop-item-category">---</strong></div>
-                <div><span>Fonte</span><strong id="shop-item-source">---</strong></div>
+          <div class="shop-layout">
+            <aside class="shop-list-wrap">
+              <button id="refresh-shop-button" class="refresh-shop-button" type="button">Atualizar Loja</button>
+              <div id="shop-list" class="shop-list"></div>
+            </aside>
+
+            <section class="shop-preview-wrap">
+              <canvas id="shop-preview"></canvas>
+              <div class="shop-item-info">
+                <span>Item selecionado</span>
+                <strong id="shop-item-name">Nenhum item</strong>
+                <small id="shop-item-path">models/</small>
               </div>
               <button id="place-shop-item-button" class="place-shop-item-button" type="button">Colocar no quarto</button>
             </section>
-
-            <section class="catalog-page catalog-preview-page">
-              <span class="catalog-page-number">02</span>
-              <canvas id="shop-preview"></canvas>
-              <div class="catalog-shadow"></div>
-              <div class="catalog-nav">
-                <button id="catalog-prev-button" type="button" aria-label="Item anterior">&lt;</button>
-                <button id="catalog-next-button" type="button" aria-label="Proximo item">&gt;</button>
-              </div>
-            </section>
-          </div>
-
-          <div class="catalog-strip-wrap">
-            <button id="refresh-shop-button" class="refresh-shop-button" type="button">Atualizar</button>
-            <div id="shop-list" class="shop-list catalog-strip"></div>
           </div>
         </div>
       </section>
