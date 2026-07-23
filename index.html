@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Quarto 5x5 - Protótipo</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game"></canvas>
+
+      <section id="start-screen" class="start-screen">
+        <div class="start-panel">
+          <h1>Quarto 5x5</h1>
+          <p>WASD para andar, mouse ou dedo para olhar ao redor.</p>
+          <button id="start-button" type="button">Entrar</button>
+        </div>
+      </section>
+
+      <div id="hud" class="hud">
+        <button id="expand-mode-button" class="hud-button expand-mode-button" type="button">Expandir</button>
+        <button id="shop-button" class="hud-button shop-button" type="button">Loja</button>
+        <button id="edit-room-button" class="hud-button edit-room-button" type="button">Editar</button>
+        <div id="joystick" class="joystick" aria-hidden="true">
+          <div id="joystick-knob" class="joystick-knob"></div>
+        </div>
+        <div class="hint">WASD + mouse / analogico + toque</div>
+      </div>
+
+      <section id="edit-panel" class="edit-panel" aria-hidden="true">
+        <button id="close-edit-button" class="back-button" type="button" aria-label="Voltar">&lt;</button>
+        <h2>Editar Quarto</h2>
+        <p id="edit-status">Toque em um objeto para selecionar.</p>
+        <div id="move-pad" class="move-pad">
+          <button class="move-button move-up" type="button" data-move="forward">↑</button>
+          <button class="move-button move-left" type="button" data-move="left">←</button>
+          <button class="move-button move-right" type="button" data-move="right">→</button>
+          <button class="move-button move-down" type="button" data-move="back">↓</button>
+        </div>
+        <div class="edit-zoom-controls">
+          <button id="edit-zoom-in-button" type="button">+</button>
+          <button id="edit-zoom-out-button" type="button">-</button>
+        </div>
+        <div class="object-tools">
+          <div class="tool-group">
+            <span>Altura</span>
+            <button class="object-tool-button" type="button" data-action="lower">Baixar</button>
+            <button class="object-tool-button" type="button" data-action="raise">Subir</button>
+          </div>
+          <div class="tool-group">
+            <span>Rotacao</span>
+            <button class="object-tool-button" type="button" data-action="rotate-left">↺</button>
+            <button class="object-tool-button" type="button" data-action="rotate-right">↻</button>
+          </div>
+          <div class="tool-group">
+            <span>Tamanho</span>
+            <button class="object-tool-button" type="button" data-action="scale-down">-</button>
+            <button class="object-tool-button" type="button" data-action="scale-up">+</button>
+          </div>
+          <div class="tool-group danger-tool">
+            <span>Objeto</span>
+            <button class="object-tool-button delete-object-button" type="button" data-action="delete">Excluir</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="shop-panel" class="shop-panel" aria-hidden="true">
+        <div class="shop-shell">
+          <header class="shop-header">
+            <div>
+              <h2>Loja Geek</h2>
+              <p id="shop-status">Carregando catalogo...</p>
+            </div>
+            <button id="close-shop-button" class="panel-close-button" type="button" aria-label="Fechar">x</button>
+          </header>
+
+          <div class="shop-layout">
+            <aside class="shop-list-wrap">
+              <button id="refresh-shop-button" class="refresh-shop-button" type="button">Atualizar Loja</button>
+              <div id="shop-list" class="shop-list"></div>
+            </aside>
+
+            <section class="shop-preview-wrap">
+              <canvas id="shop-preview"></canvas>
+              <div class="shop-item-info">
+                <span>Item selecionado</span>
+                <strong id="shop-item-name">Nenhum item</strong>
+                <small id="shop-item-path">models/</small>
+              </div>
+              <button id="place-shop-item-button" class="place-shop-item-button" type="button">Colocar no quarto</button>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="expand-panel" class="expand-panel" aria-hidden="true">
+        <button id="close-expand-button" class="back-button" type="button" aria-label="Voltar">&lt;</button>
+        <h2>Expandir Espaco</h2>
+        <div class="coin-pill"><span>$</span><strong id="coin-count">5000</strong></div>
+        <div class="expand-controls">
+          <div class="side-picker" aria-label="Escolher lado">
+            <button class="side-button" type="button" data-side="back">Frente</button>
+            <button class="side-button" type="button" data-side="left">Esquerda</button>
+            <button class="side-button is-active" type="button" data-side="right">Direita</button>
+            <button class="side-button" type="button" data-side="front">Tras</button>
+          </div>
+          <label class="size-control">
+            <span>Tamanho</span>
+            <input id="expand-amount" type="range" min="1" max="4" value="1" />
+            <strong><span id="expand-amount-label">3</span>m</strong>
+          </label>
+        </div>
+        <button id="unlock-expand-button" class="unlock-button" type="button">
+          <span>Desbloquear</span>
+          <small><span id="expand-cost-label">3000</span> moedas</small>
+        </button>
+      </section>
+    </main>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/loaders/GLTFLoader.js": "https://unpkg.com/three@0.161.0/examples/jsm/loaders/GLTFLoader.js",
+          "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+        }
+      }
+    </script>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
